@@ -13,4 +13,10 @@ xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="wrap_content"
         android:text="创建数据库"
         android:id="@+id/create_database"/>
+     <ListView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:id="@+id/time_list">
+
+     </ListView>
 </LinearLayout>
