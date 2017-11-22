@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,12 +15,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button createDB = (Button)findViewById(R.id.create_database);
-        createDB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               db = dbHelper.getWritableDatabase();
-            }
-        });
+        ListView listView = (ListView)findViewById(R.id.time_list);
+        MyAdapter myAdapter = new MyAdapter(MainActivity.this);
+        listView.setAdapter(myAdapter);
     }
 }
