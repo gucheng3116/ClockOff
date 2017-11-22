@@ -8,7 +8,8 @@ xmlns:tools="http://schemas.android.com/tools"
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="打卡"/>
+        android:text="打卡"
+        android:id="@+id/clock_off"/>
      <ListView
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
