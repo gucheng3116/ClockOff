@@ -25,12 +25,14 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar c = Calendar.getInstance();
+               /* Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH) + 1;
                 int day = c.get(Calendar.DAY_OF_MONTH);
                 String date = year + "年" + month + "月" + day + "日";
-                Toast.makeText(MainActivity.this, date, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, date, Toast.LENGTH_SHORT).show();*/
+               DBManger dbManger = DBManger.getInstance(MainActivity.this);
+               dbManger.addClockOff();
             }
         });
     }
