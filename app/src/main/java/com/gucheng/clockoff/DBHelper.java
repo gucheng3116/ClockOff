@@ -17,8 +17,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String CREATE_TABLE = "create table clockoff (id integer primary key autoincrement, " +
             "date text, " +
-            "month text, " +
-            "day text)";
+            "hour text, " +
+            "minute text)";
     public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }

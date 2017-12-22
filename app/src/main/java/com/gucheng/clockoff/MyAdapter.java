@@ -1,6 +1,8 @@
 package com.gucheng.clockoff;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +17,21 @@ public class MyAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
+    DBManger dbManger;
+    private ClockItem clockItems[];
     public MyAdapter(Context context) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
+        dbManger = DBManger.getInstance(context);
+        int count = dbManger.queryAllDataCount();
+        Log.d("liuwei", "count is " + count);
+
+        clockItems = dbManger.queryAllData();
     }
 
     @Override
     public int getCount() {
-        return 30;
+        return clockItems.length;
     }
 
     @Override
@@ -42,15 +51,37 @@ public class MyAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.list_item, null);
             holder.date = (TextView)convertView.findViewById(R.id.date);
+            holder.time = (TextView)convertView.findViewById(R.id.time);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder)convertView.getTag();
         }
-        holder.date.setText("2017/11/22");
+        ClockItem item = clockItems[i];
+        holder.date.setText(item.date);
+        String time;
+        String hour;
+        String minute;
+        if (Integer.parseInt(item.hour) < 10) {
+            hour = '0' + item.hour;
+        } else {
+            hour = item.hour;
+        }
+
+        if (Integer.parseInt(item.minute) < 10) {
+            minute = '0' + item.minute;
+        } else {
+            minute = item.minute;
+        }
+        time = hour + ":" + minute;
+
+
+
+        holder.time.setText(time);
         return convertView;
     }
 
     static class ViewHolder {
         public TextView date;
+        public TextView time;
     }
 }

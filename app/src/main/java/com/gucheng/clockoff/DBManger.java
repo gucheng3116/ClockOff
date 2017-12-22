@@ -1,10 +1,12 @@
 package com.gucheng.clockoff;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -31,8 +33,12 @@ public class DBManger {
     public void addClockOff() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
         String date = df.format(new Date());
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
         database = mDBHelper.getWritableDatabase();
-        String insert = "insert into clockoff(date,month,day) values('2017年12月2日',12,2)";
+//        String insert = "insert into clockoff(date,hour,minute) values('2017年12月2日',12,2)";
+        String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + ","+ minute + ")";
         database.execSQL(insert);
         Log.d("liuwei", "date is " + date);
         database.close();
@@ -47,7 +53,35 @@ public class DBManger {
 
     }
 
-    public void queryAllData() {
-        
+    public int queryAllDataCount() {
+        database = mDBHelper.getReadableDatabase();
+        Cursor cursor = database.query("clockoff",null,null,null,null,null,null);
+        int count = cursor.getCount();
+        cursor.close();
+        database.close();
+        return count;
     }
+
+    public ClockItem[] queryAllData() {
+
+        database = mDBHelper.getReadableDatabase();
+        Cursor cursor = database.query("clockoff",null,null,null,null,null,null);
+        ClockItem[] clockItems = new ClockItem[cursor.getCount()];
+
+        int i = 0;
+        if ((cursor!=null) && cursor.moveToFirst()) {
+            do {
+                clockItems[i] = new ClockItem();
+                clockItems[i].date = cursor.getString(cursor.getColumnIndex("date"));
+                clockItems[i].hour = cursor.getString(cursor.getColumnIndex("hour"));
+                clockItems[i].minute = cursor.getString(cursor.getColumnIndex("minute"));
+                i++;
+            } while (cursor.moveToNext());
+        }
+        return  clockItems;
+    }
+
+
+
+
 }
