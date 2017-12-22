@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,6 +43,7 @@ public class DBManger {
         String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + ","+ minute + ")";
         database.execSQL(insert);
         Log.d("liuwei", "date is " + date);
+        EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
         database.close();
 
     }
@@ -78,6 +81,8 @@ public class DBManger {
                 i++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
+        database.close();
         return  clockItems;
     }
 

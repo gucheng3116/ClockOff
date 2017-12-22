@@ -84,4 +84,10 @@ public class MyAdapter extends BaseAdapter {
         public TextView date;
         public TextView time;
     }
+
+    @Override
+    public void notifyDataSetChanged() {
+        clockItems = dbManger.queryAllData();
+        super.notifyDataSetChanged();
+    }
 }
