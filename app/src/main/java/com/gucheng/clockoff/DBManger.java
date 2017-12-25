@@ -86,6 +86,21 @@ public class DBManger {
         return  clockItems;
     }
 
+    public void delete(int position) {
+        database = mDBHelper.getWritableDatabase();
+        Cursor cursor = database.query("clockoff",null,null,null,null,null,null);
+        cursor.moveToPosition(position);
+        int id = 0;
+        if (cursor != null) {
+            id = cursor.getInt(cursor.getColumnIndex("id"));
+        }
+        String sqlDelete = "delete from clockoff where id = " + id;
+        database.execSQL(sqlDelete);
+        cursor.close();
+        database.close();
+        EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
+    }
+
 
 
 
