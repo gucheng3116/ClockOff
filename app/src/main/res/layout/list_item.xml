@@ -22,7 +22,8 @@
             android:text="修改"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:id="@+id/edit"/>
+            android:id="@+id/edit"
+            android:focusable="false"/>
     </RelativeLayout>
 
 

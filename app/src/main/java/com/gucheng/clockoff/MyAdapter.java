@@ -97,6 +97,8 @@ public class MyAdapter extends BaseAdapter {
                             public void onTimeSet(TimePicker timerPicker,
                                                   int hourOfDay, int minute) {
                                 Toast.makeText(mContext,"选择了" + hourOfDay + "时" + minute + "分", Toast.LENGTH_SHORT).show();
+                                dbManger.updateTime(item.id, hourOfDay, minute);
+
                             }
                         };
                 Dialog dialog = new TimePickerDialog(mContext, timeListener,

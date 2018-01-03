@@ -58,7 +58,7 @@ public class DBManger {
 
     public int queryAllDataCount() {
         database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query("clockoff",null,null,null,null,null,null);
+        Cursor cursor = database.query("clockoff",null,null,null,null,null,"date desc");
         int count = cursor.getCount();
         cursor.close();
         database.close();
@@ -68,7 +68,8 @@ public class DBManger {
     public ClockItem[] queryAllData() {
 
         database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query("clockoff",null,null,null,null,null,null);
+        Cursor cursor = database.query("clockoff",null,null,null,
+                null,null,"date desc, hour desc, minute desc");
         ClockItem[] clockItems = new ClockItem[cursor.getCount()];
 
         int i = 0;
@@ -78,6 +79,7 @@ public class DBManger {
                 clockItems[i].date = cursor.getString(cursor.getColumnIndex("date"));
                 clockItems[i].hour = cursor.getString(cursor.getColumnIndex("hour"));
                 clockItems[i].minute = cursor.getString(cursor.getColumnIndex("minute"));
+                clockItems[i].id = cursor.getInt(cursor.getColumnIndex("id"));
                 i++;
             } while (cursor.moveToNext());
         }
@@ -101,7 +103,14 @@ public class DBManger {
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
     }
 
-
+    public void updateTime(int id, int hour, int minute) {
+        String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where id = " +id;
+        database = mDBHelper.getWritableDatabase();
+//        Cursor cursor = database.query("clockoff", null, null, null, null,null,null);
+        database.execSQL(updateSql);
+        database.close();
+        EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
+    }
 
 
 }

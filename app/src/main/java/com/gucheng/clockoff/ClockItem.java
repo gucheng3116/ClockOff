@@ -9,6 +9,7 @@ public class ClockItem {
     String date = new String();
     String hour = new String();
     String minute = new String();
+    int id = 0;
     public ClockItem() {
 
     }
