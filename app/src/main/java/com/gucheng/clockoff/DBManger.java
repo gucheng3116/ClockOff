@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -39,9 +40,17 @@ public class DBManger {
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
         database = mDBHelper.getWritableDatabase();
-//        String insert = "insert into clockoff(date,hour,minute) values('2017年12月2日',12,2)";
         String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + ","+ minute + ")";
-        database.execSQL(insert);
+        Cursor cursor = database.query("clockoff",null,"date = ?",new String[]{date},null,null,null);
+        if (cursor.getCount() > 0) {
+            Toast.makeText(mContext, "已经存在数据，采取更新操作", Toast.LENGTH_SHORT).show();
+            String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where date = '" + date + "'";
+            database.execSQL(updateSql);
+        } else {
+            Toast.makeText(mContext, "没有数据，采取插入操作", Toast.LENGTH_SHORT).show();
+            database.execSQL(insert);
+        }
+
         Log.d("liuwei", "date is " + date);
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
         database.close();
@@ -58,7 +67,8 @@ public class DBManger {
 
     public int queryAllDataCount() {
         database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query("clockoff",null,null,null,null,null,"date desc");
+        Cursor cursor = database.query("clockoff",null,null,
+                null,null,null,"date desc, hour desc, minute desc");
         int count = cursor.getCount();
         cursor.close();
         database.close();
@@ -90,7 +100,7 @@ public class DBManger {
 
     public void delete(int position) {
         database = mDBHelper.getWritableDatabase();
-        Cursor cursor = database.query("clockoff",null,null,null,null,null,null);
+        Cursor cursor = database.query("clockoff",null,null,null,null,null,"date desc, hour desc, minute desc");
         cursor.moveToPosition(position);
         int id = 0;
         if (cursor != null) {

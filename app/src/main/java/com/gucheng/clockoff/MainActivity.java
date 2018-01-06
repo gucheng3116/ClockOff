@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent msg) {
         String event = msg.getMsg();
-        Toast.makeText(MainActivity.this,msg.getMsg(),Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MainActivity.this,msg.getMsg(),Toast.LENGTH_SHORT).show();
         if (event.equals("notifyDataSetChange")) {
             myAdapter.notifyDataSetChanged();
         }
