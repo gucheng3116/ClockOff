@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -88,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
 //        Toast.makeText(MainActivity.this,msg.getMsg(),Toast.LENGTH_SHORT).show();
         if (event.equals("notifyDataSetChange")) {
             myAdapter.notifyDataSetChanged();
+        } else if (event.equals("calcAvgTime")) {
+            TextView textView = (TextView)findViewById(R.id.avgTIme);
+            textView.setText(msg.getAvgTime());
         }
     }
+
 }

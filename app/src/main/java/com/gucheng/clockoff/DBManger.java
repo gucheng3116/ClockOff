@@ -54,6 +54,7 @@ public class DBManger {
         Log.d("liuwei", "date is " + date);
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
         database.close();
+        calcAvgTime("2018年01月%");
 
     }
 
@@ -110,6 +111,7 @@ public class DBManger {
         database.execSQL(sqlDelete);
         cursor.close();
         database.close();
+        calcAvgTime("2018年01月%");
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
     }
 
@@ -119,8 +121,54 @@ public class DBManger {
 //        Cursor cursor = database.query("clockoff", null, null, null, null,null,null);
         database.execSQL(updateSql);
         database.close();
+        calcAvgTime("2018年01月%");
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
     }
 
+    public void calcAvgTime(String currentMonth) {
+        database = mDBHelper.getReadableDatabase();
+        Cursor cursor = database.query("clockoff", null, "date like ?", new String[]{currentMonth}, null, null, null);
+        int count = 0;
+        int totalHour = 0;
+        int totalMinute = 0;
+        int avgTimeByMinute = 0;
+        int avgHour = 0;
+        int avgMinute = 0;
+        if (cursor != null) {
+            count = cursor.getCount();
+            Toast.makeText(mContext, "count is " + count, Toast.LENGTH_SHORT).show();
+            if (count > 0) {
+                while (cursor.moveToNext()) {
+                    totalHour += cursor.getInt(cursor.getColumnIndex("hour"));
+                    totalMinute += cursor.getInt(cursor.getColumnIndex("minute"));
+
+                }
+                avgTimeByMinute = (totalHour * 60 + totalMinute) / count;
+                avgHour = avgTimeByMinute / 60;
+                avgMinute = avgTimeByMinute % 60;
+                Log.d("liuwei", "avgHour is " + avgHour + ", avgMinute is " + avgMinute);
+            }
+            Log.d("liuwei", "totalHour is " + totalHour + ", totalMinute is " + totalMinute);
+
+        }
+        MessageEvent msg = new MessageEvent("calcAvgTime");
+        String hour = "";
+        String minute = "";
+        if (avgHour < 10) {
+            hour = "0" + avgHour + "时";
+        } else {
+            hour = avgHour + "时";
+        }
+        if (avgMinute < 10) {
+            minute = "0" + avgMinute + "分";
+        } else {
+            minute = avgMinute + "分";
+        }
+        msg.setAvgTime("平均时间为 " + hour + minute);
+        EventBus.getDefault().post(msg);
+        cursor.close();
+        database.close();
+
+    }
 
 }

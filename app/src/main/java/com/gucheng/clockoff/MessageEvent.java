@@ -6,6 +6,7 @@ package com.gucheng.clockoff;
 
 public class MessageEvent {
     private String mMsg;
+    private String avgTime = "";
     public MessageEvent(String msg) {
         mMsg = msg;
     }
@@ -14,5 +15,11 @@ public class MessageEvent {
     }
     public void setMsg(String msg) {
         mMsg = msg;
+    }
+    public  String getAvgTime() {
+        return avgTime;
+    }
+    public void setAvgTime(String time) {
+        avgTime = time;
     }
 }
