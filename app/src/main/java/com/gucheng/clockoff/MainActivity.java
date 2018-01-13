@@ -20,7 +20,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -132,6 +134,14 @@ public class MainActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月");
+        String date = df.format(new Date());
+        dbManger.calcAvgTime(date + "%");
     }
 
     @Override

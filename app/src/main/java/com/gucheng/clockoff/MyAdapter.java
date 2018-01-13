@@ -34,6 +34,7 @@ public class MyAdapter extends BaseAdapter {
         int count = dbManger.queryAllDataCount();
         Log.d("liuwei", "count is " + count);
 
+
         clockItems = dbManger.queryAllData();
     }
 
