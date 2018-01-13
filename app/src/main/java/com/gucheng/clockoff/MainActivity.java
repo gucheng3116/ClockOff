@@ -1,5 +1,7 @@
 package com.gucheng.clockoff;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
@@ -8,13 +10,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     MyAdapter myAdapter;
     DBManger dbManger;
+    String mDate = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +74,62 @@ public class MainActivity extends AppCompatActivity {
                         }).create();
                 dialog.show();
                 return false;
+            }
+        });
+
+        Button btnSupple = (Button)findViewById(R.id.supplement);
+        btnSupple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar =Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int monthOfYear = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+                final TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                      String time;
+                      if (hour > 9) {
+                          time = "" +hour;
+                      } else {
+                          time = "0" + hour;
+                      }
+                      if (minute > 9) {
+                          time = time + ":" + minute;
+                      } else {
+                          time = time + ":0" + minute;
+                      }
+                        Toast.makeText(MainActivity.this, "选择了" + time, Toast.LENGTH_SHORT).show();
+                        dbManger.addClockOff(mDate, hour, minute);
+
+                    }
+                }, hour, minute, true);
+                DatePickerDialog datePickerDialog =
+                        new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+
+
+                                if ((i1 + 1) > 9)  {
+                                    mDate = i + "年" + (i1 + 1) + "月";
+
+//                                    Toast.makeText(MainActivity.this, "选择了" + i + "年" + (i1 + 1) + "月" + i2 + "日", Toast.LENGTH_SHORT).show();
+
+                                } else {
+//                                    Toast.makeText(MainActivity.this, "选择了" + i + "年0" + (i1 + 1) + "月" + i2 + "日", Toast.LENGTH_SHORT).show();
+                                    mDate = i + "年0" + (i1 + 1) + "月";
+                                }
+                                if (i2 > 9) {
+                                    mDate = mDate + i2 + "日";
+                                } else {
+                                    mDate = mDate +  "0" + i2 + "日";
+                                }
+                                timePickerDialog.show();
+                            }
+                        }, year, monthOfYear, day);
+                datePickerDialog.show();
             }
         });
     }

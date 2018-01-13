@@ -58,6 +58,25 @@ public class DBManger {
 
     }
 
+    public void addClockOff(String date, int hour, int minute) {
+        database = mDBHelper.getWritableDatabase();
+        String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + ","+ minute + ")";
+        Cursor cursor = database.query("clockoff",null,"date = ?",new String[]{date},null,null,null);
+        if (cursor.getCount() > 0) {
+            Toast.makeText(mContext, "已经存在数据，采取更新操作", Toast.LENGTH_SHORT).show();
+            String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where date = '" + date + "'";
+            database.execSQL(updateSql);
+        } else {
+            Toast.makeText(mContext, "没有数据，采取插入操作", Toast.LENGTH_SHORT).show();
+            database.execSQL(insert);
+        }
+
+        Log.d("liuwei", "date is " + date);
+        EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
+        database.close();
+        calcAvgTime("2018年01月%");
+    }
+
     public void queryCurrentMonth() {
 
     }
@@ -136,7 +155,7 @@ public class DBManger {
         int avgMinute = 0;
         if (cursor != null) {
             count = cursor.getCount();
-            Toast.makeText(mContext, "count is " + count, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "count is " + count, Toast.LENGTH_SHORT).show();
             if (count > 0) {
                 while (cursor.moveToNext()) {
                     totalHour += cursor.getInt(cursor.getColumnIndex("hour"));
