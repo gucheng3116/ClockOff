@@ -6,7 +6,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
 /**
- * Created by liuwei on 2018/1/13.
+ * Created by suolong on 2018/1/13.
  */
 
 public class ClockApplication extends Application {

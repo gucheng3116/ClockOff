@@ -43,15 +43,15 @@ public class DBManger {
         String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + ","+ minute + ")";
         Cursor cursor = database.query("clockoff",null,"date = ?",new String[]{date},null,null,null);
         if (cursor.getCount() > 0) {
-            Toast.makeText(mContext, "已经存在数据，采取更新操作", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "数据已更新", Toast.LENGTH_SHORT).show();
             String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where date = '" + date + "'";
             database.execSQL(updateSql);
         } else {
-            Toast.makeText(mContext, "没有数据，采取插入操作", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "增加了一条新数据", Toast.LENGTH_SHORT).show();
             database.execSQL(insert);
         }
 
-        Log.d("liuwei", "date is " + date);
+        Log.d("suolong", "date is " + date);
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
         database.close();
         calcAvgTime("2018年01月%");
@@ -63,15 +63,15 @@ public class DBManger {
         String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + ","+ minute + ")";
         Cursor cursor = database.query("clockoff",null,"date = ?",new String[]{date},null,null,null);
         if (cursor.getCount() > 0) {
-            Toast.makeText(mContext, "已经存在数据，采取更新操作", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "数据已更新", Toast.LENGTH_SHORT).show();
             String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where date = '" + date + "'";
             database.execSQL(updateSql);
         } else {
-            Toast.makeText(mContext, "没有数据，采取插入操作", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "增加了一条新数据", Toast.LENGTH_SHORT).show();
             database.execSQL(insert);
         }
 
-        Log.d("liuwei", "date is " + date);
+        Log.d("suolong", "date is " + date);
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
         database.close();
         calcAvgTime("2018年01月%");
@@ -165,9 +165,9 @@ public class DBManger {
                 avgTimeByMinute = (totalHour * 60 + totalMinute) / count;
                 avgHour = avgTimeByMinute / 60;
                 avgMinute = avgTimeByMinute % 60;
-                Log.d("liuwei", "avgHour is " + avgHour + ", avgMinute is " + avgMinute);
+                Log.d("suolong", "avgHour is " + avgHour + ", avgMinute is " + avgMinute);
             }
-            Log.d("liuwei", "totalHour is " + totalHour + ", totalMinute is " + totalMinute);
+            Log.d("suolong", "totalHour is " + totalHour + ", totalMinute is " + totalMinute);
 
         }
         MessageEvent msg = new MessageEvent("calcAvgTime");

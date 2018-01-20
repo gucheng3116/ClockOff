@@ -3,6 +3,7 @@ package com.gucheng.clockoff;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -189,7 +190,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Toast.makeText(this,"联系作者", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, ContactAuthorActivity.class);
+        startActivity(intent);
         return super.onOptionsItemSelected(item);
 
     }

@@ -32,7 +32,7 @@ public class MyAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(mContext);
         dbManger = DBManger.getInstance(context);
         int count = dbManger.queryAllDataCount();
-        Log.d("liuwei", "count is " + count);
+        Log.d("suolong", "count is " + count);
 
 
         clockItems = dbManger.queryAllData();
