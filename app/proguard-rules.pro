@@ -52,3 +52,9 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
