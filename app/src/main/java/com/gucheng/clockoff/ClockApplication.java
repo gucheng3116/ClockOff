@@ -13,6 +13,7 @@ public class ClockApplication extends Application {
     public void onCreate() {
         super.onCreate();
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "1fe6a20054bcef865eeb0991ee84525b");
+        UMConfigure.setLogEnabled(true);
     }
 
 }
