@@ -54,7 +54,7 @@ public class DBManger {
         Log.d("suolong", "date is " + date);
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
         database.close();
-        calcAvgTime("2018年01月%");
+        calcAvgTime();
 
     }
 
@@ -74,7 +74,7 @@ public class DBManger {
         Log.d("suolong", "date is " + date);
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
         database.close();
-        calcAvgTime("2018年01月%");
+        calcAvgTime();
     }
 
     public void queryCurrentMonth() {
@@ -130,7 +130,7 @@ public class DBManger {
         database.execSQL(sqlDelete);
         cursor.close();
         database.close();
-        calcAvgTime("2018年01月%");
+        calcAvgTime();
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
     }
 
@@ -140,13 +140,13 @@ public class DBManger {
 //        Cursor cursor = database.query("clockoff", null, null, null, null,null,null);
         database.execSQL(updateSql);
         database.close();
-        calcAvgTime("2018年01月%");
+        calcAvgTime();
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
     }
 
-    public void calcAvgTime(String currentMonth) {
+    public void calcAvgTime(String date) {
         database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query("clockoff", null, "date like ?", new String[]{currentMonth}, null, null, null);
+        Cursor cursor = database.query("clockoff", null, "date like ?", new String[]{date}, null, null, null);
         int count = 0;
         int totalHour = 0;
         int totalMinute = 0;
@@ -188,6 +188,19 @@ public class DBManger {
         cursor.close();
         database.close();
 
+    }
+
+    public void calcAvgTime() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        String date;
+        if (month < 10) {
+            date = year + "年0" + month + "月%";
+        } else {
+            date = year + "年" + month + "月%";
+        }
+        calcAvgTime(date);
     }
 
 }
