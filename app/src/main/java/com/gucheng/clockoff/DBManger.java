@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.gucheng.clockoff.db.MonthTable;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
@@ -155,7 +157,6 @@ public class DBManger {
         int avgMinute = 0;
         if (cursor != null) {
             count = cursor.getCount();
-//            Toast.makeText(mContext, "count is " + count, Toast.LENGTH_SHORT).show();
             if (count > 0) {
                 while (cursor.moveToNext()) {
                     totalHour += cursor.getInt(cursor.getColumnIndex("hour"));
@@ -183,7 +184,8 @@ public class DBManger {
         } else {
             minute = avgMinute + "分";
         }
-        msg.setAvgTime("平均时间为 " + hour + minute);
+        msg.setAvgTime("本月平均时间为 " + hour + minute);
+        MonthTable.insert(database, "'" + date.replace("%", "") + "'", avgHour + "", avgMinute + "", count);
         EventBus.getDefault().post(msg);
         cursor.close();
         database.close();

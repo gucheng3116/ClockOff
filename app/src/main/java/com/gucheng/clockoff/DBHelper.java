@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import com.gucheng.clockoff.db.MonthTable;
+
 /**
  * Created by liuwei on 2017/11/14.
  */
@@ -14,8 +16,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private Context mContext;
 
     private static final String DATABASE_NAME = "TimeLeaveOffice.db";
-    private static final int DATABASE_VERSION = 1;
-    private static final String CREATE_TABLE = "create table clockoff (id integer primary key autoincrement, " +
+    private static final int DATABASE_VERSION = 2;
+    private static final String CREATE_TABLE = "create table if not exists clockoff (id integer primary key autoincrement, " +
             "date text, " +
             "hour text, " +
             "minute text)";
@@ -36,11 +38,13 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE);
+        sqLiteDatabase.execSQL(MonthTable.CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        sqLiteDatabase.execSQL(CREATE_TABLE);
+        sqLiteDatabase.execSQL(MonthTable.CREATE_TABLE);
     }
 
 

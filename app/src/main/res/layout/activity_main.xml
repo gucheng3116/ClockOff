@@ -20,12 +20,17 @@ xmlns:tools="http://schemas.android.com/tools"
             android:layout_height="wrap_content"
             android:text="补打"
             android:id="@+id/supplement"/>
+        <Button
+            android:id="@+id/month_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/month_report"/>
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="平均时间为"
+        android:text="本月平均时间为"
         android:id = "@+id/avgTIme"/>
      <ListView
          android:layout_width="wrap_content"

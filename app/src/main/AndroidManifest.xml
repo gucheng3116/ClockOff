@@ -35,7 +35,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ContactAuthorActivity">
-
+        </activity>
+        <activity android:name=".activity.MonthReportActivity">
         </activity>
     </application>
 
