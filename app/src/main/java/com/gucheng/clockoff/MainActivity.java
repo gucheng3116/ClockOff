@@ -33,7 +33,6 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private SQLiteDatabase db;
     MyAdapter myAdapter;
     DBManger dbManger;
     String mDate = "";

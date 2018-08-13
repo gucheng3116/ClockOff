@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.gucheng.clockoff.R;
+import com.gucheng.clockoff.db.MonthTable;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 public class MonthReportActivity extends AppCompatActivity {
     private ListView mListView;
+    private ArrayList<MonthTable.MonthReportItem> mDatas = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,8 +30,9 @@ public class MonthReportActivity extends AppCompatActivity {
     }
 
     class MyAdapter extends BaseAdapter {
+        private ArrayList<MonthTable.MonthReportItem> monthData;
 
-        public MyAdapter(Context context, ArrayList<String> data) {
+        public MyAdapter(Context context, ArrayList<MonthTable.MonthReportItem> datas) {
 
         }
 
@@ -53,4 +56,6 @@ public class MonthReportActivity extends AppCompatActivity {
             return null;
         }
     }
+
+
 }
