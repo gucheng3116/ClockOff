@@ -48,9 +48,20 @@ public class MonthTable {
     }
 
     public static class MonthReportItem {
-        String month;
-        String hour;
-        String minute;
-        int count;
+        public String month;
+        public String hour;
+        public String minute;
+        public int count;
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("MonthReportItem{");
+            sb.append("month='").append(month).append('\'');
+            sb.append(", hour='").append(hour).append('\'');
+            sb.append(", minute='").append(minute).append('\'');
+            sb.append(", count=").append(count);
+            sb.append('}');
+            return sb.toString();
+        }
     }
 }
