@@ -185,7 +185,12 @@ public class DBManger {
             minute = avgMinute + "分";
         }
         msg.setAvgTime("本月平均时间为 " + hour + minute);
-        MonthTable.insert(database, "'" + date.replace("%", "") + "'", avgHour + "", avgMinute + "", count);
+        MonthTable.querySpecificMonthCount(database, date.replace("%", ""));
+        if (count == 0) {
+             MonthTable.insert(database, date.replace("%", ""), avgHour + "", avgMinute + "", count);
+        } else {
+
+        }
         EventBus.getDefault().post(msg);
         cursor.close();
         database.close();
