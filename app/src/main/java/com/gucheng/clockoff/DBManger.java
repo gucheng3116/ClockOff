@@ -19,17 +19,20 @@ import java.util.Date;
  */
 
 public class DBManger {
+    private static final String TAG = "DBManager";
     private DBHelper mDBHelper;
     private SQLiteDatabase database;
     private static Context mContext;
     private static DBManger dbManger = null;
+
     private DBManger() {
         mDBHelper = new DBHelper(mContext);
     }
+
     public static DBManger getInstance(Context context) {
         mContext = context;
         if (dbManger == null) {
-             dbManger = new DBManger();
+            dbManger = new DBManger();
         }
 
         return dbManger;
@@ -42,8 +45,8 @@ public class DBManger {
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
         database = mDBHelper.getWritableDatabase();
-        String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + ","+ minute + ")";
-        Cursor cursor = database.query("clockoff",null,"date = ?",new String[]{date},null,null,null);
+        String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + "," + minute + ")";
+        Cursor cursor = database.query("clockoff", null, "date = ?", new String[]{date}, null, null, null);
         if (cursor.getCount() > 0) {
             Toast.makeText(mContext, "数据已更新", Toast.LENGTH_SHORT).show();
             String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where date = '" + date + "'";
@@ -62,8 +65,8 @@ public class DBManger {
 
     public void addClockOff(String date, int hour, int minute) {
         database = mDBHelper.getWritableDatabase();
-        String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + ","+ minute + ")";
-        Cursor cursor = database.query("clockoff",null,"date = ?",new String[]{date},null,null,null);
+        String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + "," + minute + ")";
+        Cursor cursor = database.query("clockoff", null, "date = ?", new String[]{date}, null, null, null);
         if (cursor.getCount() > 0) {
             Toast.makeText(mContext, "数据已更新", Toast.LENGTH_SHORT).show();
             String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where date = '" + date + "'";
@@ -76,7 +79,9 @@ public class DBManger {
         Log.d("suolong", "date is " + date);
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
         database.close();
-        calcAvgTime();
+        int end = date.indexOf("月");
+        String month = date.substring(0, end + 1);
+        calcAvgTime(month);
     }
 
     public void queryCurrentMonth() {
@@ -89,8 +94,8 @@ public class DBManger {
 
     public int queryAllDataCount() {
         database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query("clockoff",null,null,
-                null,null,null,"date desc, hour desc, minute desc");
+        Cursor cursor = database.query("clockoff", null, null,
+                null, null, null, "date desc, hour desc, minute desc");
         int count = cursor.getCount();
         cursor.close();
         database.close();
@@ -100,12 +105,12 @@ public class DBManger {
     public ClockItem[] queryAllData() {
 
         database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query("clockoff",null,null,null,
-                null,null,"date desc, hour desc, minute desc");
+        Cursor cursor = database.query("clockoff", null, null, null,
+                null, null, "date desc, hour desc, minute desc");
         ClockItem[] clockItems = new ClockItem[cursor.getCount()];
 
         int i = 0;
-        if ((cursor!=null) && cursor.moveToFirst()) {
+        if ((cursor != null) && cursor.moveToFirst()) {
             do {
                 clockItems[i] = new ClockItem();
                 clockItems[i].date = cursor.getString(cursor.getColumnIndex("date"));
@@ -117,12 +122,12 @@ public class DBManger {
         }
         cursor.close();
         database.close();
-        return  clockItems;
+        return clockItems;
     }
 
     public void delete(int position) {
         database = mDBHelper.getWritableDatabase();
-        Cursor cursor = database.query("clockoff",null,null,null,null,null,"date desc, hour desc, minute desc");
+        Cursor cursor = database.query("clockoff", null, null, null, null, null, "date desc, hour desc, minute desc");
         cursor.moveToPosition(position);
         int id = 0;
         if (cursor != null) {
@@ -137,18 +142,27 @@ public class DBManger {
     }
 
     public void updateTime(int id, int hour, int minute) {
-        String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where id = " +id;
+        String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where id = " + id;
         database = mDBHelper.getWritableDatabase();
-//        Cursor cursor = database.query("clockoff", null, null, null, null,null,null);
         database.execSQL(updateSql);
+        Cursor cursor = database.query("clockoff", null, "id=" + id, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int dateIndex = cursor.getColumnIndex("date");
+            String date = cursor.getString(dateIndex);
+            int end = date.indexOf("月");
+            date = date.substring(0, end + 1);
+            Log.d(TAG, "date is " + date);
+            calcAvgTime(date);
+        }
         database.close();
-        calcAvgTime();
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
     }
 
-    public void calcAvgTime(String date) {
+    public void calcAvgTime(String month) {
+
+        month = month + "%";
         database = mDBHelper.getReadableDatabase();
-        Cursor cursor = database.query("clockoff", null, "date like ?", new String[]{date}, null, null, null);
+        Cursor cursor = database.query("clockoff", null, "date like ?", new String[]{month}, null, null, null);
         int count = 0;
         int totalHour = 0;
         int totalMinute = 0;
@@ -185,13 +199,20 @@ public class DBManger {
             minute = avgMinute + "分";
         }
         msg.setAvgTime("本月平均时间为 " + hour + minute);
-        MonthTable.querySpecificMonthCount(database, date.replace("%", ""));
-        if (count == 0) {
-             MonthTable.insert(database, date.replace("%", ""), avgHour + "", avgMinute + "", count);
+        int monthData = MonthTable.querySpecificMonthCount(database, month.replace("%", ""));
+        if (monthData == 0) {
+            MonthTable.insert(database, month.replace("%", ""), avgHour + "", avgMinute + "", count);
         } else {
-
+            MonthTable.update();
         }
-        EventBus.getDefault().post(msg);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月");
+        String currentMonth = df.format(new Date());
+        if (month.contains(currentMonth)) {
+            EventBus.getDefault().post(msg);
+            Log.d(TAG, "update current month");
+        } else {
+            Log.d(TAG, "not update");
+        }
         cursor.close();
         database.close();
 
@@ -203,9 +224,9 @@ public class DBManger {
         int month = calendar.get(Calendar.MONTH) + 1;
         String date;
         if (month < 10) {
-            date = year + "年0" + month + "月%";
+            date = year + "年0" + month + "月";
         } else {
-            date = year + "年" + month + "月%";
+            date = year + "年" + month + "月";
         }
         calcAvgTime(date);
     }
