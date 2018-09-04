@@ -130,8 +130,9 @@ public class DBManger {
         Cursor cursor = database.query("clockoff", null, null, null, null, null, "date desc, hour desc, minute desc");
         cursor.moveToPosition(position);
         int id = 0;
-        if (cursor != null) {
+        if (cursor != null && cursor.moveToFirst()) {
             id = cursor.getInt(cursor.getColumnIndex("id"));
+
         }
         String sqlDelete = "delete from clockoff where id = " + id;
         database.execSQL(sqlDelete);
@@ -203,7 +204,7 @@ public class DBManger {
         if (monthData == 0) {
             MonthTable.insert(database, month.replace("%", ""), avgHour + "", avgMinute + "", count);
         } else {
-            MonthTable.update();
+            MonthTable.update(database, month.replace("%", ""), avgHour + "", avgMinute + "", count);
         }
         SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月");
         String currentMonth = df.format(new Date());

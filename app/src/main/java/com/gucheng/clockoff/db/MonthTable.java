@@ -82,7 +82,10 @@ public class MonthTable {
         db.execSQL(deleteSql);
     }
 
-    public static void update () {
+    public static void update(SQLiteDatabase db, String month, String hour, String minute, int count) {
+        String sql = "update %s set hour = %s, minute = %s, count = %d where month = ?";
+        sql = String.format(sql, TABLE_NAME, hour, minute, count);
+        db.execSQL(sql, new Object[] {month});
 
     }
 }
