@@ -130,15 +130,19 @@ public class DBManger {
         Cursor cursor = database.query("clockoff", null, null, null, null, null, "date desc, hour desc, minute desc");
         cursor.moveToPosition(position);
         int id = 0;
-        if (cursor != null && cursor.moveToFirst()) {
+        String date = null;
+        if (cursor != null) {
             id = cursor.getInt(cursor.getColumnIndex("id"));
+            date = cursor.getString(cursor.getColumnIndex("date"));
+            int end = date.indexOf("月");
+            date = date.substring(0, end + 1);
 
         }
         String sqlDelete = "delete from clockoff where id = " + id;
         database.execSQL(sqlDelete);
         cursor.close();
         database.close();
-        calcAvgTime();
+        calcAvgTime(date);
         EventBus.getDefault().post(new MessageEvent("notifyDataSetChange"));
     }
 
@@ -204,7 +208,11 @@ public class DBManger {
         if (monthData == 0) {
             MonthTable.insert(database, month.replace("%", ""), avgHour + "", avgMinute + "", count);
         } else {
-            MonthTable.update(database, month.replace("%", ""), avgHour + "", avgMinute + "", count);
+            if (count == 0) {
+                MonthTable.delete(database, month.replace("%", ""));
+            } else {
+                MonthTable.update(database, month.replace("%", ""), avgHour + "", avgMinute + "", count);
+            }
         }
         SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月");
         String currentMonth = df.format(new Date());
