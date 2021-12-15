@@ -48,9 +48,9 @@ public class DBManger {
         String insert = "insert into clockoff(date,hour,minute) values('" + date + "'," + hour + "," + minute + ")";
         Cursor cursor = database.query("clockoff", null, "date = ?", new String[]{date}, null, null, null);
         if (cursor.getCount() > 0) {
-            Toast.makeText(mContext, "数据已更新", Toast.LENGTH_SHORT).show();
-            String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where date = '" + date + "'";
-            database.execSQL(updateSql);
+//            Toast.makeText(mContext, "数据已更新", Toast.LENGTH_SHORT).show();
+//            String updateSql = "update clockoff set hour = " + hour + ",minute = " + minute + " where date = '" + date + "'";
+            database.execSQL(insert);
         } else {
             Toast.makeText(mContext, "增加了一条新数据", Toast.LENGTH_SHORT).show();
             database.execSQL(insert);
